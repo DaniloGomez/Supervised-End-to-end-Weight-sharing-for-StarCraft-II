@@ -23,7 +23,7 @@ class TrainedAgent(base_agent.BaseAgent):
     def step(self, obs):
         super(TrainedAgent, self).step(obs)
 
-        observation = obs.observation["minimap"][5]
+        observation = obs.observation.feature_minimap[5]
         observation = Utils.feature_array_to_img(observation, max_target_value=1.0)
         observation = Utils.resize_squared_img(observation, 84)
         #Utils.show(observation)
@@ -31,20 +31,20 @@ class TrainedAgent(base_agent.BaseAgent):
         output_size = len(actions.FUNCTIONS)
 
         available_actions = np.zeros(output_size)
-        for action_index in obs.observation["available_actions"]:
+        for action_index in obs.observation.available_actions:
             available_actions[action_index] = 1.0
 
         input_batch = [np.array([observation]), np.array([available_actions])]
         action, position = self.model.predict(input_batch)
-        screen_size = np.shape(obs.observation["screen"])[1]
+        screen_size = np.shape(obs.observation.feature_screen)[1]
         x = int(screen_size * position[0])
         y = int(screen_size * position[1])
 
-        if action in obs.observation["available_actions"]:
-            print "action is available: ", action, x, y
+        if action in obs.observation.available_actions:
+            print("action is available: ", action, x, y)
         else:
-            action = np.random.choice(obs.observation["available_actions"])
-            print "take random action"
+            action = np.random.choice(obs.observation.available_actions)
+            print("take random action")
 
         if action == actions.FUNCTIONS.no_op.id:
             params = []

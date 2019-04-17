@@ -23,14 +23,14 @@ class ScriptedAgent(base_agent.BaseAgent):
     def step(self, obs):
         super(ScriptedAgent, self).step(obs)
 
-        observation = obs.observation["minimap"][5]
+        observation = obs.observation.feature_minimap[5]
         observation = Utils.feature_array_to_img(observation, max_target_value=1.0)
         observation = Utils.resize_squared_img(observation, 84)
         #Utils.show(observation)
 
         if GAME == "beacon":
-            if actions.FUNCTIONS.Move_screen.id in obs.observation["available_actions"]:
-                player_relative = obs.observation["screen"][features.SCREEN_FEATURES.player_relative.index]
+            if actions.FUNCTIONS.Move_screen.id in obs.observation.available_actions:
+                player_relative = obs.observation.feature_screen[features.SCREEN_FEATURES.player_relative.index]
                 neutral_y, neutral_x = (player_relative == 3).nonzero()
 
                 if not neutral_y.any():
@@ -45,8 +45,8 @@ class ScriptedAgent(base_agent.BaseAgent):
                 action = actions.FUNCTIONS.select_army.id
                 params = [[0]]
         elif GAME == "mineral":
-            if actions.FUNCTIONS.Move_screen.id in obs.observation["available_actions"]:
-                player_relative = obs.observation["screen"][features.SCREEN_FEATURES.player_relative.index]
+            if actions.FUNCTIONS.Move_screen.id in obs.observation.available_actions:
+                player_relative = obs.observation.feature_screen[features.SCREEN_FEATURES.player_relative.index]
                 neutral_y, neutral_x = (player_relative == 3).nonzero()
                 player_y, player_x = (player_relative == 1).nonzero()
                 if not neutral_y.any() or not player_y.any():
@@ -65,7 +65,7 @@ class ScriptedAgent(base_agent.BaseAgent):
                 action = actions.FUNCTIONS.select_army.id
                 params = [[0]]
 
-        self.states.append(np.array([observation, obs.observation["available_actions"], action, params]))
+        self.states.append(np.array([observation, obs.observation.available_actions, action, params]))
 
         if len(self.states) == 64:
             new_file_name = str(uuid.uuid1())
