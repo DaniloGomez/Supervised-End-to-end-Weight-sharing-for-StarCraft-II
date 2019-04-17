@@ -2,21 +2,32 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 # scripted agents taken from PySC2, credits to DeepMind
 # https://github.com/deepmind/pysc2/blob/master/pysc2/agents/scripted_agent.py
 
-import numpy
+import sys
+import os
 import uuid
+import numpy as np
 
 from pysc2.agents import base_agent
 from pysc2.lib import actions
 from pysc2.lib import features
 
-from Utils import *
+from Utils import Utils
 
-GAME = "beacon"
+MAP = sys.argv[sys.argv.index('--map') + 1]
+
+GAME = {
+    'MoveToBeacon': 'beacon',
+    'CollectMineralShards': 'mineral'
+}[MAP]
+
 
 
 class ScriptedAgent(base_agent.BaseAgent):
     def __init__(self):
         base_agent.BaseAgent.__init__(self)
+
+        import sys
+        print(sys.argv)
 
         self.states = []
 
@@ -28,7 +39,7 @@ class ScriptedAgent(base_agent.BaseAgent):
         observation = Utils.resize_squared_img(observation, 84)
         #Utils.show(observation)
 
-        if GAME == "beacon":
+        if MAP == 'beacon':
             if actions.FUNCTIONS.Move_screen.id in obs.observation.available_actions:
                 player_relative = obs.observation.feature_screen[features.SCREEN_FEATURES.player_relative.index]
                 neutral_y, neutral_x = (player_relative == 3).nonzero()
@@ -44,7 +55,7 @@ class ScriptedAgent(base_agent.BaseAgent):
             else:
                 action = actions.FUNCTIONS.select_army.id
                 params = [[0]]
-        elif GAME == "mineral":
+        elif GAME == 'mineral':
             if actions.FUNCTIONS.Move_screen.id in obs.observation.available_actions:
                 player_relative = obs.observation.feature_screen[features.SCREEN_FEATURES.player_relative.index]
                 neutral_y, neutral_x = (player_relative == 3).nonzero()
@@ -56,7 +67,7 @@ class ScriptedAgent(base_agent.BaseAgent):
                     player = [int(player_x.mean()), int(player_y.mean())]
                     closest, min_dist = None, None
                     for p in zip(neutral_x, neutral_y):
-                        dist = numpy.linalg.norm(numpy.array(player) - numpy.array(p))
+                        dist = np.linalg.norm(np.array(player) - np.array(p))
                         if not min_dist or dist < min_dist:
                             closest, min_dist = p, dist
                     action = actions.FUNCTIONS.Move_screen.id
@@ -69,8 +80,8 @@ class ScriptedAgent(base_agent.BaseAgent):
 
         if len(self.states) == 64:
             new_file_name = str(uuid.uuid1())
-
-            np.save("dataset_{}/{}".format(GAME, new_file_name), np.array(self.states))
+            os.makedirs('dataset_{}'.format(GAME), exist_ok=True)
+            np.save('dataset_{}/{}'.format(GAME, new_file_name), np.array(self.states))
 
             self.states = []
 

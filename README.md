@@ -12,7 +12,7 @@ Sorry in advance, the code is far from clean and not very well-structured. Pleas
 * StarCraft 2 for AI research: https://starcraft2.com/en-us/#free-to-play
 * DeepMind PySC2 (1.2): https://github.com/deepmind/pysc2
 * Mini-game maps: https://github.com/deepmind/pysc2/tree/master/pysc2/maps/mini_games
-* Python (2.7.13): https://www.python.org/downloads/
+* Python3 (2.7.13): https://www.python.org/downloads/
 * TensorFlow (1.4.0): https://github.com/tensorflow/tensorflow
 * Keras (2.0.8): https://github.com/keras-team/keras
 
@@ -44,25 +44,22 @@ My model has two inputs and two outputs. It takes an image as input (minimap pla
 Run my pre-trained models in *./bin*:
 ```sh
 # play the game with trained agent
-# load the correct pre-trained model by changing self.model.load("agent_beacon") in TrainedAgent.py (yeah I know...)
-python -m pysc2.bin.agent --map MoveToBeacon --agent TrainedAgent.TrainedAgent
-python -m pysc2.bin.agent --map CollectMineralShards --agent TrainedAgent.TrainedAgent
+python3 -m pysc2.bin.agent --map MoveToBeacon --agent TrainedAgent.TrainedAgent
+python3 -m pysc2.bin.agent --map CollectMineralShards --agent TrainedAgent.TrainedAgent
 ```
 
 I have made my datasets available *(dataset_beacon.zip, dataset_mineral.zip)* but you can gather your own data as follows:
 ```sh
-mkdir dataset_beacon
-mkdir dataset_mineral
 # generate training data using scripted agents
-# change variable GAME = "mineral|beacon" in ScriptedAgent.py (no argument sorry...)
-python -m pysc2.bin.agent --map MoveToBeacon --agent ScriptedAgent.ScriptedAgent --max_agent_steps 10000
-python -m pysc2.bin.agent --map CollectMineralShards --agent ScriptedAgent.ScriptedAgent --max_agent_steps 10000
+python3 -m pysc2.bin.agent --map MoveToBeacon --agent ScriptedAgent.ScriptedAgent --max_agent_steps 10000
+python3 -m pysc2.bin.agent --map CollectMineralShards --agent ScriptedAgent.ScriptedAgent --max_agent_steps 10000
 ```
 
 Train your own model:
 ```sh
-# train the model
-python ./train.py beacon|mineral
+# train the models using generated datasets
+python3 train.py beacon
+python3 train.py mineral
 ```
 
 ## Citation

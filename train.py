@@ -4,9 +4,8 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 import sys
 import numpy as np
 
-from Utils import *
-from Dataset import *
-from End2EndWeightSharingModel import *
+from Dataset import Dataset
+from End2EndWeightSharingModel import End2EndWeightSharingModel
 
 np.random.seed(1234)
 

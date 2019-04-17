@@ -7,7 +7,6 @@ class Utils:
 
     @staticmethod
     def show(image):
-        import cv2
         cv2.namedWindow("view", cv2.WINDOW_AUTOSIZE)
         cv2.imshow("view", image)
         cv2.waitKey(0)

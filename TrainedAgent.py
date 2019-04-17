@@ -1,15 +1,23 @@
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
+import sys
 import numpy as np
 
 from pysc2.agents import base_agent
 from pysc2.lib import actions
 from pysc2.lib import features
 
-from End2EndWeightSharingModel import *
-from Utils import *
+from End2EndWeightSharingModel import End2EndWeightSharingModel
+from Utils import Utils
 
 np.random.seed(1234)
+
+MAP = sys.argv[sys.argv.index('--map') + 1]
+
+AGENT = {
+    'MoveToBeacon': 'agent_beacon',
+    'CollectMineralShards': 'agent_mineral'
+}[MAP]
 
 
 class TrainedAgent(base_agent.BaseAgent):
@@ -17,8 +25,7 @@ class TrainedAgent(base_agent.BaseAgent):
         base_agent.BaseAgent.__init__(self)
 
         self.model = End2EndWeightSharingModel()
-        self.model.load("agent_beacon")
-        #self.model.load("agent_mineral")
+        self.model.load(AGENT)
 
     def step(self, obs):
         super(TrainedAgent, self).step(obs)

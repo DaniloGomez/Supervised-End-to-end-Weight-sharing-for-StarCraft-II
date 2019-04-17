@@ -18,7 +18,7 @@ class Dataset:
         for f in os.listdir(path):
             if f.find(".npy") != -1:
                 file_name = f[:f.find(".npy")]
-                states = np.load("{}/{}.npy".format(path, file_name), encoding="bytes")
+                states = np.load("{}/{}.npy".format(path, file_name))
 
                 for i in range(0, len(states)):
                     state = states[i]

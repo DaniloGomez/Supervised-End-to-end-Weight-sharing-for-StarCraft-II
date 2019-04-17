@@ -1,5 +1,6 @@
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
+import os
 import numpy as np
 
 from keras.layers import Dense, Conv2D, Input, Flatten, concatenate
@@ -55,13 +56,14 @@ class End2EndWeightSharingModel:
         return action, position
 
     def save(self, name):
+        os.makedirs('bin', exist_ok=True)
         model_json = self.model.to_json()
-        with open("bin/{}.json".format(name), "w") as json_file:
+        with open('bin/{}.json'.format(name), 'w') as json_file:
             json_file.write(model_json)
-        self.model.save_weights("bin/{}.h5".format(name))
+        self.model.save_weights('bin/{}.h5'.format(name))
 
     def load(self, name):
-        with open("bin/{}.json".format(name), "r") as json_file:
+        with open('bin/{}.json'.format(name), 'r') as json_file:
             loaded_model_json = json_file.read()
         self.model = model_from_json(loaded_model_json)
-        self.model.load_weights("bin/{}.h5".format(name))
+        self.model.load_weights('bin/{}.h5'.format(name))
